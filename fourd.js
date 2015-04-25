@@ -6,30 +6,30 @@
 // https://github.com/mrdoob/three.js/tree/r65
 // tested with r66
 
-var CONSTANTS = {
-  width: 1000,
-  attraction: 0.025,
-  far: 1000,
-  optimal_distance: 1,
-  minimum_velocity: 0.001,
-  friction: 0.60, // bigger for more space
+var FourD = function(selector){
 
-  gravity: 0.070,
+  var CONSTANTS = {
+    width: 1000,
+    attraction: 0.025,
+    far: 1000,
+    optimal_distance: 1.0,
+    minimum_velocity: 0.001,
+    friction: 0.60,
+
+    gravity: 0.070,
+
+    rangeMiIn: -1.0,
+    rangeMaxIn: 1.0,
+    rangeMinOut: -10,
+    rangeMaxOut: 10,
+
+    BHN3: {
+      inner_distance: 0.036,
+      repulsion: 10.0,
+      epsilon: 0.1
+    }
+  };
   
-  rangeMinIn: -1.0,
-  rangeMaxIn: 1.0,
-  rangeMinOut: -10,
-  rangeMaxOut: 10,
-  
-  BHN3: {
-    inner_distance: 0.036,
-    repulsion: 10.0,
-    epsilon: 0.1
-  }
-};
-
-var FourD = (function(querySelector){
-
   var is_vertex = function(potential){
     return potential.hasOwnProperty('id') && 
       potential.hasOwnProperty('edge_count') && 
@@ -37,8 +37,8 @@ var FourD = (function(querySelector){
   };
 
   // Vertex
-  var Vertex = function(id, options){
-
+  var Vertex = function(id){
+    
     this.id = id;
     
     this.position = new THREE.Vector3(0, 0, 0);
@@ -55,7 +55,7 @@ var FourD = (function(querySelector){
   };
 
   Vertex.prototype.paint = function(scene){
-    this.object = cube(scene, options);
+    this.object = cube(scene, this.options);
   };
 
   // Edge
@@ -66,15 +66,15 @@ var FourD = (function(querySelector){
     }
 
     if(!is_vertex(source)){
-      var type = typeof source;
-      var message = 'Source should be a Vertex instead of a ' + type + '.';
-      throw new Error(message);
+      var source_type = typeof source;
+      var source_error_msg = 'Source should be a Vertex instead of a ' + src_type + '.';
+      throw new Error(src_error_msg);
     }
 
     if(!is_vertex(target)){
-      var type = typeof target;
-      var message = 'Target should be a Vertex instead of a ' + type + '.';
-      throw new Error(message);
+      var target_type = typeof target;
+      var target_error_msg = 'Target should be a Vertex instead of a ' + tgt_type + '.';
+      throw new Error(tgt_error_msg);
     }
 
     this.id = id;
@@ -96,7 +96,7 @@ var FourD = (function(querySelector){
 
   Edge.prototype.paint = function(scene){
     this.object = line(scene, this.source, this.target);
-  }
+  };
 
   Edge.prototype.toString = function(){
     return this.source.toString() + '-->' + this.target.toString(); 
@@ -142,7 +142,7 @@ var FourD = (function(querySelector){
     this.edge_counts = {};
     this.edge_id_spawn = 0;
     this.vertex_id_spawn = 0;
-  }
+  };
 
   Graph.prototype._make_key = function(source, target){
     return '_' + source.toString() + '_' + target.toString();
@@ -210,10 +210,22 @@ var FourD = (function(querySelector){
 
   var cube = function(scene, options){
 
-    options.width = options.width || 3;
-    options.height = options.height || 3;
-    options.depth = options.depth || 3;
-    options.color = options.color || 0x00ccaa
+    if(options === undefined){
+      options = {};
+    }
+    
+    if(options.width === undefined){
+      options.width = 3;
+    }
+    if(options.height === undefined){
+      options.height = 3;
+    }
+    if(options.depth === undefined){
+      options.depth = options.depth || 3;
+    }
+    if(options.color === undefined){
+      options.color = options.color || 0x00ccaa;
+    }
 
     var geometry = new THREE.CubeGeometry(
       options.width,
@@ -225,7 +237,10 @@ var FourD = (function(querySelector){
     var material = new THREE.MeshBasicMaterial( options.color );
     var cube = new THREE.Mesh( geometry, material );
     var scale = 2;
-    cube.position = new THREE.Vector3( Math.random() * scale, Math.random() * scale, Math.random() * scale);
+    cube.position = new THREE.Vector3(
+      Math.random() * scale, Math.random() * scale,
+      Math.random() * scale
+    );
     cube.matrixAutoUpdate = true;
     
     scene.add(cube);
@@ -284,7 +299,8 @@ var FourD = (function(querySelector){
     if(this.inners.length === 0){
       this.place_inner(vertex);
     }else{
-      if(this.center().distanceTo(vertex.object.position) <= this.constants.inner_distance){
+      if(this.center().distanceTo(vertex.object.position) <=
+	 this.constants.inner_distance){
         this.place_inner(vertex);
       }else{
         this.place_outer(vertex);
@@ -296,7 +312,10 @@ var FourD = (function(querySelector){
     if(this.inners.indexOf(vertex) > -1){
       for(var i=0; i<this.inners.length; i++){
         if(vertex !== this.inners[i]){
-          var individual_force = force_fn(vertex.object.position.clone(), this.inners[i].object.position.clone());
+          var individual_force = force_fn(
+	    vertex.object.position.clone(),
+	    this.inners[i].object.position.clone()
+	  );
           force.add(individual_force);
         }
       }
@@ -337,7 +356,7 @@ var FourD = (function(querySelector){
     enumerator2 = difference;
     denominator2 = absolute_difference;
     
-    term2 = enumerator2.divideScalar(denominator2)
+    term2 = enumerator2.divideScalar(denominator2);
     
     // result
     result = term2.multiplyScalar(term1);  
@@ -349,8 +368,10 @@ var FourD = (function(querySelector){
 
     // calculate repulsions
     var tree = new BHN3();
-    for(var v in this.V){
-      var vertex = this.V[v];
+    var vertex, edge, v, e;
+    
+    for(v in this.V){
+      vertex = this.V[v];
       vertex.acceleration = new THREE.Vector3(0.0, 0.0, 0.0);
       vertex.repulsion_forces = new THREE.Vector3(0.0, 0.0, 0.0);
       vertex.attraction_forces = new THREE.Vector3(0.0, 0.0, 0.0);
@@ -358,19 +379,24 @@ var FourD = (function(querySelector){
       tree.insert(vertex);
     }
     
-    for(var v in this.V){
-      var vertex = this.V[v];
+    for(v in this.V){
+      vertex = this.V[v];
       vertex.repulsion_forces = vertex.repulsion_forces || new THREE.Vector3();
       vertex.repulsion_forces.set(0.0, 0.0, 0.0);
-      tree.estimate(vertex, vertex.repulsion_forces, BHN3.prototype.pairwise_repulsion);
+      tree.estimate(
+	vertex, vertex.repulsion_forces,
+	BHN3.prototype.pairwise_repulsion
+      );
     }
     
     // calculate attractions
     
-    for(var e in this.E){
-      var edge = this.E[e];
+    for(e in this.E){
+      edge = this.E[e];
       
-      var attraction = edge.source.object.position.clone().sub(edge.target.object.position);
+      var attraction = edge.source.object.position.clone().sub(
+	edge.target.object.position
+      );
       attraction.multiplyScalar(-1 * CONSTANTS.attraction);
 
       edge.source.attraction_forces.sub(attraction);
@@ -382,9 +408,9 @@ var FourD = (function(querySelector){
       }
     }
     
-    for(var v in this.V){
+    for(v in this.V){
       // update velocity
-      var vertex = this.V[v];
+      vertex = this.V[v];
       if(vertex){
         var friction = vertex.velocity.multiplyScalar(CONSTANTS.friction);
 
@@ -396,9 +422,8 @@ var FourD = (function(querySelector){
       }
     }
     
-    for(var e in this.E){
-
-      var edge = this.E[e];
+    for(e in this.E){
+      edge = this.E[e];
 
       if(edge){  
         edge.object.geometry.dirty = true;
@@ -407,35 +432,72 @@ var FourD = (function(querySelector){
       }
     }
   };
-
-  var scene = new THREE.Scene();
-
-  var camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, CONSTANTS.far );
-  var light = new THREE.PointLight( 0xeeeeee ); // soft white light
-
-  CONSTANTS.scene = scene;
-  scene.add( camera );
-  scene.add( light );
-
-  var renderer = new THREE.CanvasRenderer();
-  renderer.setClearColor(0xefefef);
-  renderer.setSize( window.innerWidth, window.innerHeight );
-
-  document.querySelector(selector).appendChild( renderer.domElement );
-
-  var graph = new Graph(scene);
-
-  camera.position.z = -250;
-  camera.lookAt(new THREE.Vector3(0, 0, 0));
   
+  this._internals = {};
+  var that = this,
+      scene,
+      element,
+      camera,
+      light,
+      renderer,
+      graph;
+
   var render = function render(){
     requestAnimationFrame(render);
     graph.layout();
-    renderer.render(CONSTANTS.scene, camera);
+    renderer.render(scene, camera);
+  };
+
+  var clear = function clear(){
+    graph.clear();
   };
   
-  var clear = function(){
-    graph.clear();
+  this.init = function(selector, options){
+    scene = new THREE.Scene();
+    element = document.querySelector(selector);
+    if(!element){
+      throw "element " + selector + " wasn't found on the page.";
+    }
+    camera = new THREE.PerspectiveCamera(
+      70,
+      options.width / options.height,
+      1,
+      CONSTANTS.far
+    );
+    light = new THREE.PointLight( 0xeeeeee ); // soft white light
+    
+    CONSTANTS.scene = scene;
+    scene.add( camera );
+    scene.add( light );
+    
+    renderer = new THREE.CanvasRenderer();
+    renderer.setClearColor(0xefefef);
+    console.log('element, width: ', element.width, 'element, height: ', element.height);
+    renderer.setSize( element.width, element.height );
+    
+    document.querySelector(selector).appendChild( renderer.domElement );
+    
+    graph = new Graph(scene);
+    
+    camera.position.z = -250;
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+    that._internals = {
+      scene: scene,
+      element: element,
+      camera: camera,
+      light: light,
+      renderer: renderer,
+      graph: graph
+    };
+
+    this.version = "0.0.5";
+    this.graph = graph;
+    this.render = render;
+    this.clear = clear;
+    this.variables = CONSTANTS;
+
+    render();
   };
   
   this._internals = {
@@ -443,18 +505,17 @@ var FourD = (function(querySelector){
     Edge: Edge,
     Graph: Graph,
     BHN3: BHN3,
-    scene: scene,
-    camera: camera,
-    light: light,
-    renderer: renderer,
   };
-  
-  this.api = {
-    version: "0.0.2",
-    graph: graph,
-    render: render,
-    clear: graph.clear
+
+  // untested
+  this.setCubeFn = function(fn){
+    cube = fn;
   };
+
+  this.setLineFn = function(fn){
+    line = fn;
+  };
+  // end untested
   
   return this;
-})();
+};
