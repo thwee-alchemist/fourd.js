@@ -472,8 +472,8 @@ var FourD = function(selector){
     
     renderer = new THREE.CanvasRenderer();
     renderer.setClearColor(0xefefef);
-    console.log('element, width: ', element.width, 'element, height: ', element.height);
-    renderer.setSize( element.width, element.height );
+    console.log('element, width: ', options.width, 'element, height: ', options.height);
+    renderer.setSize( options.width, options.height );
     
     document.querySelector(selector).appendChild( renderer.domElement );
     

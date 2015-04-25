@@ -5,7 +5,7 @@
 var fourd = new FourD();
 fourd.init('#demo', {width: 300, height: 300});
 var graph = fourd.graph;
-fourd.render();
+// fourd.render();
 polyiamond(fourd, 10);
 console.log('graph:', graph);
 
