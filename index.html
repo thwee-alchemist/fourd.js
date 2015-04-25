@@ -14,12 +14,23 @@
       <p>The FourD library allows web developers to visualize graphs in 3D. Desisgned
 	from the get go to run in the browser, it's been tested in Chrome, Firefox, and Internet Explorer 11 (scary settings permitting ;). Rumor has it the library even works on a Raspberry PI. This is, of course, complete and utter nonsense, and when I catch those responsible ...</p>
       <p>Here is a small demo:</p>
+
+      <label for="zoom">Zoom</label>
+      <input
+	 id="zoom"
+	 type="range"
+	 min="-250"
+	 max="0"
+	 value="50"
+	 step="10"
+	 oninput="eval('fourd.variables.zoom = value')"></input>
       <div id="demo"></div>
+
       <p>Hopefully you've enjoyed this demo and leave with a warm fuzzy feeling</p>
     </section>
     <script type="text/javascript" src="index.js"></script>
     <a
        href="javascript:void(0)"
-       onclick="polyiamond(parseInt(prompt('number of corners:')));">polyiamond()</a>
+       onclick="polyiamond(fourd, parseInt(prompt('number of corners:')));">polyiamond()</a>
   </body>
 </html>

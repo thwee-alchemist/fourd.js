@@ -8,6 +8,10 @@ body {
 
 }
 
+#zoom {
+    appearance: slider-vertical;
+}
+
 #demo {
     border: 1px solid;
     margin: 0;
@@ -15,7 +19,3 @@ body {
     padding: 0;
 }
 
-#demo>canvas{
-    width: 400px;
-    height: 400px;
-}

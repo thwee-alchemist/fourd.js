@@ -15,6 +15,7 @@ var FourD = function(selector){
     optimal_distance: 1.0,
     minimum_velocity: 0.001,
     friction: 0.60,
+    zoom: 50,
 
     gravity: 0.070,
 
@@ -221,10 +222,10 @@ var FourD = function(selector){
       options.height = 3;
     }
     if(options.depth === undefined){
-      options.depth = options.depth || 3;
+      options.depth = 3;
     }
     if(options.color === undefined){
-      options.color = options.color || 0x00ccaa;
+      options.color = 0x00ccaa;
     }
 
     var geometry = new THREE.CubeGeometry(
@@ -363,6 +364,7 @@ var FourD = function(selector){
     
     return result;
   };
+  
   var edges = false;
   Graph.prototype.layout = function(){
 
@@ -414,7 +416,11 @@ var FourD = function(selector){
       if(vertex){
         var friction = vertex.velocity.multiplyScalar(CONSTANTS.friction);
 
-        vertex.acceleration.add(vertex.repulsion_forces.clone().add(vertex.attraction_forces.clone().negate()));
+        vertex.acceleration.add(
+	  vertex.repulsion_forces.clone().add(
+	    vertex.attraction_forces.clone().negate()
+	  )
+	);
         vertex.acceleration.sub(friction);
         
         vertex.velocity.add(vertex.acceleration);
@@ -431,6 +437,8 @@ var FourD = function(selector){
         edge.object.geometry.verticesNeedUpdate = true;
       }
     }
+
+    this.center = tree.center();
   };
   
   this._internals = {};
@@ -446,6 +454,8 @@ var FourD = function(selector){
     requestAnimationFrame(render);
     graph.layout();
     renderer.render(scene, camera);
+    camera.position.z = graph.center.z - CONSTANTS.zoom;
+    camera.lookAt(graph.center);
   };
 
   var clear = function clear(){
