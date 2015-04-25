@@ -1,0 +1,23 @@
+/*
+  index.css
+  Joshua M. Moore
+  April 25th, 2015
+*/
+
+body {
+
+}
+
+#demo {
+    border: 1px solid;
+    width: 400px;
+    height: 400px;
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+
+#demo>canvas{
+    width: 400px;
+    height: 400px;
+}
