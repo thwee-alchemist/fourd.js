@@ -14,7 +14,8 @@ This is a library, it can be used to visualize graphs. With a little tweaking, y
 
 Intended to run in the browser, it has been tested in Chrome, Firefox, and Internet Explorer 11. Rumor has it that by switching to the CanvasRenderer, the library even works on a Raspberry PI. This is, of course, complete and utter nonsense, and when I catch those responsible ...
 
-
+### API
+This library has been tested with r66 of three.js. The library is pure javascript. As time goes on, I might involve a build system, i.e. grunt. 
 
 ```
 var fourd = new FourD(); // instantiation
