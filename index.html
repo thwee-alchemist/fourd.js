@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta author="Joshua M. Moore">
     <link rel="stylesheet" href="index.css">
-    <script type="text/javascript" src="r66.three.min.js"></script>
-    <script type="text/javascript" src="fourd.js"></script>
+    <script type="text/javascript" src="lib/r66.three.min.js"></script>
+    <script type="text/javascript" src="lib/fourd.js"></script>
   </head>
   <body>
     <section>
@@ -19,11 +19,23 @@
       <input
 	 id="zoom"
 	 type="range"
-	 min="-250"
+	 min="-100"
 	 max="0"
 	 value="50"
 	 step="10"
 	 oninput="eval('fourd.variables.zoom = value')"></input>
+
+      <!--
+      <label for="repulsion">Repulsion</label>
+      <input
+	 id="repulsion"
+	 type="range"
+	 min="1"
+	 max="10"
+	 value="5"
+	 step="1"
+	 oninput="eval('fourd.variables.repulsion = logarithmic_scale(1, 10, -10, 100, value)');"></input>
+      -->
       <div id="demo"></div>
 
       <p>Hopefully you've enjoyed this demo and leave with a warm fuzzy feeling</p>
@@ -32,5 +44,9 @@
     <a
        href="javascript:void(0)"
        onclick="polyiamond(fourd, parseInt(prompt('number of corners:')));">polyiamond()</a>
+    <br />
+    <a
+       href="javascript:void(0)"
+       onclick="bob_malkovich(fourd)">bob()</a>
   </body>
 </html>
