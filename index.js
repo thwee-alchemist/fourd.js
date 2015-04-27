@@ -31,6 +31,7 @@ var interval;
 function random(fourd, n){
   if(!n){
     n = 0;
+    return;
   }
   
   fourd.clear();
