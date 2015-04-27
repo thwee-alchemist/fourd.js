@@ -3,53 +3,17 @@
 // April 24th, 2015
 
 fourd = new FourD();
-fourd.init('#demo', {width: 600, height: 350});
+fourd.init('#display', {width: 600, height: 350});
 var graph = fourd.graph;
 fourd.clear();
-
-// fourd.render();
-
-function polyiamond(fourd, n){
-  fourd.clear();
-  
-  var top_bottom_options = {
-    width: 5,
-    height: 5,
-    depth: 5,
-    texture: 'img/bob.png'
-    // color: 0x00ccaa
-  };
-  
-  var top    = fourd.graph.add_vertex(top_bottom_options);
-  var bottom = fourd.graph.add_vertex(top_bottom_options);
-
-  var vertex_options = {
-    width: 5,
-    height: 5,
-    depth: 5,
-    color: 0xff0000
-  };
-  
-  var corners = [];
-  for(var i=0; i<n; i++){
-    corners.push(fourd.graph.add_vertex(vertex_options));
-  }
-
-  for(var j=0; j<n; j++){
-    fourd.graph.add_edge(top,    corners[j], {strength: 0.7}); // what to pass on?
-    fourd.graph.add_edge(bottom, corners[j], {strength: 0.7});
-  }
-
-  return 1;
-}
 
 var last_bob;
 function bob_malkovich(fourd){
   var bob = fourd.graph.add_vertex({
-    width: 256,
-    height: 256,
-    depth: 256,
-    texture: 'lib/bob.png'
+    width: 5,
+    height: 5,
+    depth: 5,
+    texture: Math.random() > 0.5 ? 'img/bob.png' : 'img/alice.png'
   });
 
   if(Math.random() > .5 && last_bob){
@@ -62,15 +26,75 @@ function bob_malkovich(fourd){
   last_bob = bob;
 }
 
+var interval;
 
-polyiamond(fourd, 10);
-
-function logarithmic_scale(minIn, maxIn, minOut, maxOut, value){
-  var minIn = minIn || 1,
-      maxIn = maxIn || 10,
-      minOut = minOut || -10,
-      maxOut = maxOut || 10;
-
-  var scale = (maxOut - minOut) / (maxIn - minIn);
-  return Math.exp(minOut + scale * (value - minIn));
+function random(fourd, n){
+  fourd.clear();
+  
+  var count = 0;
+  interval = setInterval(function(){
+    fourd.graph.add_vertex();
+    
+    if(count++ >= n){
+      clearInterval(interval);
+    }
+    
+    var source = fourd.graph.V[Math.floor(Math.random() * Object.keys(fourd.graph.V).length)];
+    var target = fourd.graph.V[Math.floor(Math.random() * Object.keys(fourd.graph.V).length)];
+    
+    if(count > 2){
+      fourd.graph.add_edge(source, target);
+    }
+  }, 25);
 }
+
+function shape(fourd, string){
+  // get vertices and edges out of string
+  var edge_strings = string.split(/\,/);
+  var edge_sep = /\,/;
+  var edge_re = /\>/;
+  var edge_string_to_vertex_strings = function(edge_string){
+    // edge_string: "1>2"
+    return edge_string.split(edge_re);
+  }
+  var vertex_strings = edge_strings.map(edge_string_to_vertex_strings);
+  var vertex_numbers = [];
+  var extract_vertex = function(vertex_string){
+    var vertex = parseInt(vertex_string);
+    if(vertex_numbers.indexOf(vertex) === -1){
+      vertex_numbers.push(vertex);
+    }
+    return vertex;
+  }
+  var edge_representations = vertex_strings.map(extract_vertex);
+  
+  
+  
+  console.log(edge_representations);
+  
+  // draw vertices and edges
+  var index = 0;
+  var vertices = [];
+  var i = setInterval(function(){
+    vertices.push(fourd.graph.add_vertex());
+    
+    if(index++ >= vertices.length){
+      clearInterval(i);
+    }
+  }, 25); // looks smoother
+  
+  index = 0;
+  var edges = [];
+  interval = setInterval(function(){
+    edges.push(fourd.graph.add_edge(
+      edge_representations[index][0],
+      edge_representations[index][1]
+    ));
+    
+    if(index++ >= edges.length){
+      clearInterval(interval);
+    }
+  }, 25);
+}
+
+random(fourd, 25);

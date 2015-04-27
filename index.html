@@ -9,44 +9,76 @@
     <script type="text/javascript" src="lib/fourd.js"></script>
   </head>
   <body>
-    <section>
-      <header>The FourD Library</header>
-      <p>The FourD library allows web developers to visualize graphs in 3D. Desisgned
-	from the get go to run in the browser, it's been tested in Chrome, Firefox, and Internet Explorer 11 (scary settings permitting ;). Rumor has it the library even works on a Raspberry PI. This is, of course, complete and utter nonsense, and when I catch those responsible ...</p>
-      <p>Here is a small demo:</p>
 
-      <label for="zoom">Zoom</label>
-      <input
-	 id="zoom"
-	 type="range"
-	 min="-100"
-	 max="0"
-	 value="50"
-	 step="10"
-	 oninput="eval('fourd.variables.zoom = value')"></input>
+    <h1>The FourD Library</h1>
+    <p>The FourD library allows web developers to dynamically visualize graphs in 3D.</p>
+    <p>Seven years in the making, this project is inspired by Todd Veldhuizen's <a href="http://arxiv.org/abs/0712.1549">Dynamic Multilevel Graph Visualization</a> and <a href="http://ubietylab.net/ubigraph/">Ubigraph</a>. This library is written in javascript using <a href="https://github.com/mrdoob/">mrdoob</a>'s <a href="https://github.com/mrdoob/three.js">three.js. Thank You!</p>
+    
+    <div id="demo">
+      <div id="controls">
+        <label for="zoom">Zoom</label>
+        <input
+          id="zoom"
+          type="range"
+          min="-500"
+          max="0"
+          value="-50"
+          step="10"
+          oninput="eval('fourd.variables.zoom = value')"></input>
+        <span> | </span>
+        <a href="javascript:fourd.clear();">clear()</a>
+        <span> | </span>
+        <a href="javascript:random(fourd, parseInt(prompt('number of vertices:')));">random |></a>
+        <span> | </span>
+        <a href="javascript:polyiamond(fourd, parseInt(prompt('number of corners:')));">polyiamond |></a>
+        <span> | </span>
+        <a href="javascript:bob_malkovich(fourd);">bob |></a>
+        <span> | </span>
+        <a href="javascript:clearInterval(interval);">pause ||</a>
+        <!--
+        <a href="javascript:shape(fourd, prompt('Specify vertices by numbers and edges with a greater sign (>), separated by a comma (,). Ex.: 1>2,2>3,3>4,4>5,5>6,6>1.'))">shape()</a>
+        -->
+      </div>
+      <div id="display"></div>
+    </div>
 
-      <!--
-      <label for="repulsion">Repulsion</label>
-      <input
-	 id="repulsion"
-	 type="range"
-	 min="1"
-	 max="10"
-	 value="5"
-	 step="1"
-	 oninput="eval('fourd.variables.repulsion = logarithmic_scale(1, 10, -10, 100, value)');"></input>
-      -->
-      <div id="demo"></div>
+    <h2>What do these words mean?</h2>
+    <span class="definition">A <b>Graph</b> is a collection of vertices and edges. Think of a train network or phone and power lines. In the train network, the train stations are the vertices (singular: vertex, also called nodes), while the tracks the train travels on are the edges. The phone and power lines are the edges, the poles and buildings are vertices.<br /></span>
+    <span class="definition"><b>Dynamic</b> in this context means the vertices and edges don't have to be known upfront. You can add or remove them on the go. <br /></span>
+    <span class="definition"><b>Visualization</b> means you can look at it. Please make an effort to use or plan for the use of standardized formats such as <a href="http://www.data-vocabulary.org">www.data-vocabulary.org</a>. I can do better in this department myself.<br /></span>
+    <span class="definition"><b>3D or FourD.</b> We agree to call a flat surface representing depth "3D" as long as its elements move. Add to that the dynamic property, and you get FourD.<br /></span>
 
-      <p>Hopefully you've enjoyed this demo and leave with a warm fuzzy feeling</p>
-    </section>
+    <h2>What can I do with it?</h2>
+    <span>This is a library, it can be used to visualize graphs. With a little tweaking, you could use it for a collection of mathematical shapes. I intend to make data visualizations of society. You know how social media gives us contact lists? Why can't we have nice things?</span>
+    
+    <h2>How does it work?</h2>
+    <span>
+      <h3><h3>
+      
+    </span>
+    </span>
+    
+    <h2>Compatibility</h2>
+    <span>Intended to run in the browser, it has been tested in Chrome, Firefox, and Internet Explorer 11. Rumor has it that by switching to the CanvasRenderer, the library even works on a Raspberry PI. This is, of course, complete and utter nonsense, and when I catch those responsible ...</span><br />
+    
+    <h2>Other questions</h2>
+    <span><b>Can I have it?</b> Absolutely. The library is available on <a href="https://github.com/lowrekey/fourd.js">github.com</a> under the Apache 2.0 license. Contributions are welcome.</span><br />
+    
+    <span><b>Will you display my work here?</b> Send me a link and I'll be happy to take a look at it. You can get a hold of me via <a href="mailto:lowrekey@gmail.com">email</a>.</span><br />
+    
+    <span><b>What's today's date?</b> Gong... Today is Monday, April, the 27th, 2015</span><br />
+    
+    <span><b>Credits</b>This library is a labor of love. It began in college and continued way past. It is not complete. But this milestone is a cause to celebrate. I want to thank the woman who got me into Computer Science in the first place (you know who you are), and my mother, who has supported me and endured endless rants on a topic completely foreign to her. Love you!</span><br />
+    
+    <span><b>Citizen, what is your name?</b>Huh?</span>
+    
+    <br id="last" />
+    
+    <!--
+      Work on this project has been like http://xkcd.com/1514/
+      To the next seven years!
+    -->
+    
     <script type="text/javascript" src="index.js"></script>
-    <a
-       href="javascript:void(0)"
-       onclick="polyiamond(fourd, parseInt(prompt('number of corners:')));">polyiamond()</a>
-    <br />
-    <a
-       href="javascript:void(0)"
-       onclick="bob_malkovich(fourd)">bob()</a>
   </body>
 </html>

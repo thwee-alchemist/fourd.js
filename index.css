@@ -5,17 +5,63 @@
 */
 
 body {
+    font: "Times New Roman";
+    font-size: 14px;
+    font-color: black;
+    background: 0x00ccaa;
+}
 
+a {
+    color: black;
+    underline: none;
+}
+
+a:hover{
+    font-color: 0xff9763;
 }
 
 #zoom {
     appearance: slider-vertical;
+    width: 75px;
 }
 
+#controls>* {
+    display: inline;
+    margin-bottom: 2px;
+}
+
+/*
+  letting text wrap around image:
+  stackoverflow.com/questions/16016363/how-to-position-div-with-css-and-force-text-to-wrap-around
+
+  special thanks goes as usual, to the Mozilla Developer Network.
+  view-source:https://developer.mozilla.org/samples/cssref/clear.html
+*/
+
 #demo {
+  float: left;
+  margin: 10px;
+  border: 1px solid;
+  padding: 5px;
+  background: white;
+}
+
+#display {
     border: 1px solid;
     margin: 0;
+    margin-top: 5px;
     border: 0;
     padding: 0;
 }
 
+#reasons {
+    margin-top: 10px;
+    width: 300px;
+    height: 200px;
+    margin: 20px;
+}
+
+.definition {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
