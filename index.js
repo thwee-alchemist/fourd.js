@@ -29,6 +29,10 @@ function bob_malkovich(fourd){
 var interval;
 
 function random(fourd, n){
+  if(!n){
+    n = 0;
+  }
+  
   fourd.clear();
   
   var count = 0;
