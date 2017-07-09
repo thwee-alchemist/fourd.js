@@ -9,6 +9,7 @@
   var graph = fourd.graph;
   fourd.clear();
   
+  
   function ui_random_graph(){
     var n = parseInt(prompt('number of vertices, e.g. 250:'));
     var sane = 250;
@@ -21,12 +22,15 @@
     n > 0 ? random(fourd, n) : undefined;
   }
   
+  
   var build_graph;
   var vertices = [];
+  
   
   function pause(){
     clearInterval(build_graph);
   }
+  
   
   function random(fourd, n){
     if(!n){
@@ -65,10 +69,15 @@
     }, 25);
   }
   
+  
+  // fourd.graph.add_vertex({text: "Hello, Worlds!"});
+  
+  
   random(fourd, 25);
   $('#random-graph').click(ui_random_graph);
   $('#pause').click(pause);
   $('#clear').click(clear);
+  
   
   var last_bob;
   function bob_and_alice(fourd){
