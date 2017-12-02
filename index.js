@@ -68,7 +68,7 @@
   random(fourd, 25);
   $('#random-graph').click(ui_random_graph);
   $('#pause').click(pause);
-  $('#clear').click(clear);
+  $('#clear').click(fourd.clear);
   
   var last_bob;
   function bob_and_alice(fourd){
