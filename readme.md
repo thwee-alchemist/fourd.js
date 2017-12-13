@@ -24,19 +24,27 @@ fourd.init('#selector', {width: 600, height: 350}); // initialization
 
 
 var vertex_options = {
-  width: 5, // pixels
-  height: 5,
-  depth: 5,
-  color: 0x000000 // hex color
+  cube: {
+    width: 5, // pixels
+    height: 5,
+    depth: 5,
+    color: 0x000000 // hex color
+  },
+  label: {
+    text: "some short string"
+  }
 };
 
 // or:
 
 var vertex_options = {
-  width: 5,
-  height: 5,
-  depth: 5,
-  texture: 'path_to,png'
+  cube: {
+    size: 10,
+    texture: "path/to.png"
+  },
+  label: {
+    text: "short string"
+  }
 }
 
 // or:
@@ -55,9 +63,11 @@ var edge = fourd.graph.add_edge(vertex1, vertex2, edge_options);
 fourd.graph.remove_edge(edge); // this is why you keep those variables
 fourd.graph.remove_vertex(vertex1);
 fourd.graph.remove_vertex(vertex2);
+// but if anything else, clear should take care of that as well. 
 ``` 
  
 Changelog:
-0.0.4: Added options to init function.
+0.2.0: updated documentation, labels almost work
 0.1.0: add/remove x vertex/edge works
   vertex options work.
+0.0.4: Added options to init function.
