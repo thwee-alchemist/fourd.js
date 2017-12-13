@@ -33,13 +33,18 @@ var vertex_options = {
 // or:
 
 var vertex_options = {
-  width: 5,
-  height: 5,
-  depth: 5,
-  texture: 'path_to,png'
+  cube: { // optional
+    width: 5,
+    height: 5,
+    depth: 5,
+    texture: 'path_to,png'
+  }, 
+  label: { // optional, but you should pick one of the two. This one doesn't wowrk quite yet.  
+    text: "some string" 
+  }
 }
 
-// or:
+// or: // not sure this works any more. 
 
 // leave out vertex options altogether.
 // default values will be used.
@@ -58,6 +63,7 @@ fourd.graph.remove_vertex(vertex2);
 ``` 
  
 Changelog:
-0.0.4: Added options to init function.
+0.2.0: adds labels, changes vertex options data layout
 0.1.0: add/remove x vertex/edge works
   vertex options work.
+0.0.4: Added options to init function.
