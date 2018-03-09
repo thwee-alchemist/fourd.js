@@ -41,7 +41,6 @@ a:hover{
 #demo {
   float: left;
   margin: 10px;
-  border: 1px solid;
   padding: 5px;
   background: white;
 }
@@ -49,7 +48,6 @@ a:hover{
 #display {
     margin: 0;
     margin-top: 5px;
-    border: 0;
     padding: 0;
 }
 
