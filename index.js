@@ -5,7 +5,7 @@
 (function($){
   
   fourd = new FourD();
-  fourd.init('#display', {width: 600, height: 350, background: 'oxFFFFFFF'});
+  fourd.init('#display', {width: 600, height: 350, background: '0xFFFFFFF'});
   var graph = fourd.graph;
   fourd.clear();
   
