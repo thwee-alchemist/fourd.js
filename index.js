@@ -82,13 +82,7 @@
         texture: texture
       },
       label: {
-        text: name,
-        offset: {
-          size: 5,
-          dimension: x,
-          amount: 2,
-          text: name
-        }
+        text: name
       }
     });
 
