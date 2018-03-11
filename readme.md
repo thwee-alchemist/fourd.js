@@ -67,7 +67,8 @@ fourd.graph.remove_vertex(vertex2);
 ``` 
  
 Changelog:
-0.2.0: updated documentation, labels almost work
-0.1.0: add/remove x vertex/edge works
+* 0.2.1:
+* 0.2.0: updated documentation, labels almost work
+* 0.1.0: add/remove x vertex/edge works
   vertex options work.
-0.0.4: Added options to init function.
+* 0.0.4: Added options to init function.
