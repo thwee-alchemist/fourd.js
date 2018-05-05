@@ -1,5 +1,6 @@
 # fourd.js
-[http://thwee-alchemist.github.io/fourd.js](http://thwee-alchemist.github.io/fourd.js)
+[http://thwee-alchemist.github.io/fourd.js/lib/](http://thwee-alchemist.github.io/fourd.js/lib/)
+
 ## A dynamic 3d graph visualization library
 ### What do these words mean?
 A **Graph** is a collection of vertices and edges. Think of a train network or phone and power lines. In the train network, the train stations are the vertices (singular: vertex, also called nodes), while the tracks the train travels on are the edges. The phone and power lines are the edges, the poles and buildings are vertices.
