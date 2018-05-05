@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FourD Test Page</title>
+    <script src="r90.three.min.js"></script>
+    <script src="OrbitControls.js"></script>
+    <script src="jquery-1.11.3.min.js"></script>
+    <script src="fourd.js"></script>
+    <script src="jquery-ui.min.js"></script>
+    <script src="jquery.fourd.js"></script>
+  </head>
+  <body>
+    <div id="display"></div>
+    <label for="display">
+      Drag the left mouse button to rotate. 
+      Scroll to zoom.
+    </label>
+    
+    <script>
+
+      $('#display').fourd({width: 1000, height: 500, background: 0xffffff});
+      $('#display').fourd('clear');
+      vertex0 = $(display).fourd('add_vertex', {cube: {color: 0x000000, size: 10}});
+      $('#display').fourd('camera').lookAt(vertex0.position);
+
+      vertex1 = $('#display').fourd('add_vertex', {cube: {color: 0x000000, size: 10}});
+      edge = $('#display').fourd('add_edge', vertex0, vertex1, {});
+      vertex2 = $('#display').fourd('add_vertex', {cube: {color: 0x00000, size: 10}})
+      $('#display').fourd('add_edge', vertex1, vertex2);
+      $('#display').fourd('add_edge', vertex2, vertex0);
+      
+    </script>
+  </body>
+</html>
