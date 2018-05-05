@@ -31,14 +31,15 @@
       var vertex_promise = null;
       var selected = null;
       var second = null;
-        
+      var first = null;
       var on_mousedown = function(event){
         selected = fourd.resolve_click(event);
       };
         
       var on_mousedown_select_second = function(event){
+        first = selected;
         second = fourd.resolve_click(event);
-        fourd.graph.add_edge(selected, second);
+        fourd.graph.add_edge(first, second);
         $('#display').off('mousedown', on_mousedown_select_second);
         $('#display').on('mousedown', on_mousedown);
       }
