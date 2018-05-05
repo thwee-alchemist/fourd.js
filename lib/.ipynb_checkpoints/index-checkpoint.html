@@ -1,33 +1,90 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
     <title>FourD Test Page</title>
+    <link rel="stylesheet" href="jquery.contextMenu.min.css">
     <script src="r90.three.min.js"></script>
     <script src="OrbitControls.js"></script>
     <script src="jquery-1.11.3.min.js"></script>
     <script src="fourd.js"></script>
     <script src="jquery-ui.min.js"></script>
     <script src="jquery.fourd.js"></script>
+    <script src="jquery.contextMenu.min.js"></script>
   </head>
   <body>
     <div id="display"></div>
     <label for="display">
       Drag the left mouse button to rotate. 
-      Scroll to zoom.
+      Scroll to zoom. 
+      Right click on a vertex.
     </label>
     
     <script>
 
+      cube_options = {cube: {color: 0x000000, size: 10}};
+      
       $('#display').fourd({width: 1000, height: 500, background: 0xffffff});
-      $('#display').fourd('clear');
-      vertex0 = $(display).fourd('add_vertex', {cube: {color: 0x000000, size: 10}});
-      $('#display').fourd('camera').lookAt(vertex0.position);
+      var fourd = $('#display').fourd('underlying_object');
+        
+      var awaiting_vertex = false;
+      var vertex_promise = null;
+      var selected = null;
+      var second = null;
+        
+      var on_mousedown = function(event){
+        selected = fourd.resolve_click(event);
+      };
+        
+      var on_mousedown_select_second = function(event){
+        second = fourd.resolve_click(event);
+        fourd.graph.add_edge(selected, second);
+        $('#display').off('mousedown', on_mousedown_select_second);
+        $('#display').on('mousedown', on_mousedown);
+      }
+        
+      $('#display').on('mousedown', on_mousedown);
+        
+      $.contextMenu({
+        selector: '#display',
+        callback: function(key, options, rootMenu, originalEvent){
+          if(key === 'add_adjacent_vertex' && selected){
+            fourd.graph.add_edge(selected, fourd.graph.add_vertex(cube_options));
+            return;
+          }
 
-      vertex1 = $('#display').fourd('add_vertex', {cube: {color: 0x000000, size: 10}});
-      edge = $('#display').fourd('add_edge', vertex0, vertex1, {});
-      vertex2 = $('#display').fourd('add_vertex', {cube: {color: 0x00000, size: 10}})
-      $('#display').fourd('add_edge', vertex1, vertex2);
-      $('#display').fourd('add_edge', vertex2, vertex0);
+          if(key === "remove_vertex"){
+            fourd.graph.remove_vertex(selected);
+            return;
+          }
+            
+          if(key === "add_edge"){
+            $('#display').off('mousedown', on_mousedown);
+            $('#display').on('mousedown', on_mousedown_select_second);
+            return;
+          }
+        },
+        items: {
+          "add_adjacent_vertex": {name: "Add adjacent vertex", disabled: selected},
+          "remove_vertex": {name: "Remove vertex"},
+          "add_edge": {name: "Add edge: select another vertex"}
+        }
+      });
+
+      $('#display').fourd('clear');
+      
+      vertex0 = fourd.graph.add_vertex(cube_options);
+      fourd._internals.camera.lookAt(vertex0.position);
+
+      vertex1 = fourd.graph.add_vertex(cube_options);
+      edge = fourd.graph.add_edge(vertex0, vertex1, {});
+      vertex2 = fourd.graph.add_vertex(cube_options);
+      fourd.graph.add_edge(vertex1, vertex2);
+      fourd.graph.add_edge(vertex2, vertex0);
+      
+      // less verbose
+      
+      
       
     </script>
   </body>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
     <title>FourD Test Page</title>
     <link rel="stylesheet" href="jquery.contextMenu.min.css">
     <script src="r90.three.min.js"></script>
@@ -25,25 +26,48 @@
       
       $('#display').fourd({width: 1000, height: 500, background: 0xffffff});
       var fourd = $('#display').fourd('underlying_object');
-
+        
+      var awaiting_vertex = false;
+      var vertex_promise = null;
       var selected = null;
-      $('#display').on('mousedown', function(event){
+      var second = null;
+        
+      var on_mousedown = function(event){
         selected = fourd.resolve_click(event);
-      });
+      };
+        
+      var on_mousedown_select_second = function(event){
+        second = fourd.resolve_click(event);
+        fourd.graph.add_edge(selected, second);
+        $('#display').off('mousedown', on_mousedown_select_second);
+        $('#display').on('mousedown', on_mousedown);
+      }
+        
+      $('#display').on('mousedown', on_mousedown);
+        
       $.contextMenu({
         selector: '#display',
-        callback: function(key, options){
+        callback: function(key, options, rootMenu, originalEvent){
           if(key === 'add_adjacent_vertex' && selected){
             fourd.graph.add_edge(selected, fourd.graph.add_vertex(cube_options));
+            return;
           }
 
           if(key === "remove_vertex"){
             fourd.graph.remove_vertex(selected);
+            return;
+          }
+            
+          if(key === "add_edge"){
+            $('#display').off('mousedown', on_mousedown);
+            $('#display').on('mousedown', on_mousedown_select_second);
+            return;
           }
         },
         items: {
           "add_adjacent_vertex": {name: "Add adjacent vertex", disabled: selected},
-          "remove_vertex": {name: "Remove vertex"}
+          "remove_vertex": {name: "Remove vertex"},
+          "add_edge": {name: "Add edge: select another vertex"}
         }
       });
 
