@@ -76,7 +76,7 @@
           output.edges.push([edge.source.id, edge.target.id]);
         }
         
-        download(JSON.stringify(output), 'graph.json');
+        download(JSON.stringify(output), prompt('Enter a filename:', 'graph.json'));
       };
         
       upload = function(){
