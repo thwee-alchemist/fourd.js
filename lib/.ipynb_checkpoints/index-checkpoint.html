@@ -20,7 +20,9 @@
       Scroll to zoom. 
       Right click on a vertex.
     </label>
-    <a href="javascript:prepare_download()">Download Graph</a>
+    <button onclick="prepare_download()">Download Graph</button>
+    <input type="file" id="upload">
+    <button id="confirm-upload">Import graph</button>
     
     <script>
 
@@ -59,9 +61,14 @@
           var vertex = fourd.graph.V[i];
           output.vertices.push({
             id: vertex.id, 
-            texture: vertex.options.cube.texture, 
-            color: vertex.options.cube.color, 
-            text: vertex.options.label.text
+            cube: {
+              texture: vertex.options.cube.texture, 
+              color: vertex.options.cube.color, 
+              size: vertex.options.cube.size
+            },
+            label: {
+              text: vertex.options.label.text
+            }
           });
         }
         for(var i in fourd.graph.E){
@@ -69,13 +76,31 @@
           output.edges.push([edge.source.id, edge.target.id]);
         }
         
-        download(JSON.stringify(output), 'graph-editor.json');
+        download(JSON.stringify(output), 'graph.json');
       };
         
-      snap_picture = function(){
-        $('canvas').elem().toDataURL();
-        
-      }
+      upload = function(){
+        var input = document.getElementById('upload').files[0];
+        var reader = new FileReader();
+        reader.readAsText(input);
+        reader.onload = function(e){
+          input = reader.result;
+          input = JSON.parse(input);
+          var imported_vertices = new Map();
+            
+          for(var i=0; i<input.vertices.length; i++){
+            var vertex_spec = input.vertices[i];
+            imported_vertices.set(vertex_spec.id, fourd.graph.add_vertex(vertex_spec));
+          }
+  
+          for(var i=0; i<input.edges.length; i++){
+            var edge_spec = input.edges[i];
+            fourd.graph.add_edge(imported_vertices.get(edge_spec[0]), imported_vertices.get(edge_spec[1]));
+          }
+        };
+      };
+      $('#confirm-upload').on('click', upload);
+      
         
       $('#display').on('mousedown', on_mousedown);
         
