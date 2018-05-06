@@ -39,9 +39,44 @@
       var on_mousedown_select_second = function(event){
         first = selected;
         second = fourd.resolve_click(event);
-        fourd.graph.add_edge(first, second);
+        if(first && second){
+          fourd.graph.add_edge(first, second);  
+        }
         $('#display').off('mousedown', on_mousedown_select_second);
         $('#display').on('mousedown', on_mousedown);
+      }
+      
+      var add_vertex = function(){
+        var url = prompt('Image URL (leave blank for black):', 'https://example.com/image.png')
+      }
+      
+      // leave this global
+      prepare_download = function(){
+        var output = {vertices: [], edges: []};
+        for(var i in fourd.graph.V){
+          var vertex = fourd.graph.V[i];
+          output.vertices.push({
+            id: vertex.id, 
+            texture: vertex.options.cube.texture, 
+            color: vertex.options.cube.color, 
+            text: vertex.options.label.text
+          });
+        }
+        for(var i in fourd.graph.E){
+          var edge = fourd.graph.E[i];
+          output.edges.push([edge.source.id, edge.target.id]);
+        }
+        
+        browser.downloads.download({
+          filename: 'graph-editor.json.txt',
+          body: JSON.stringify(output),
+          saveAs: true
+        });
+      };
+        
+      snap_picture = function(){
+        $('canvas').elem().toDataURL();
+        
       }
         
       $('#display').on('mousedown', on_mousedown);
@@ -49,11 +84,40 @@
       $.contextMenu({
         selector: '#display',
         callback: function(key, options, rootMenu, originalEvent){
+            
+          if(key === 'add_vertex'){
+            fourd.graph.add_vertex(cube_options);
+            return;
+          }
+            
+          if(key === 'add_picture_vertex'){
+            fourd.graph.add_vertex({
+              cube: {
+                size: 10,
+                texture: prompt('Picture url:', 'https://example.com/image.png')
+              }
+            });
+            return;
+          }
+            
           if(key === 'add_adjacent_vertex' && selected){
             fourd.graph.add_edge(selected, fourd.graph.add_vertex(cube_options));
             return;
           }
 
+          if(key === 'add_adjacent_picture_vertex'){
+            fourd.graph.add_edge(
+              selected, 
+              fourd.graph.add_vertex({
+                cube: {
+                  size: 10, 
+                  texture: prompt('picture url', 'https://example.com/image.png')
+                }
+              })
+            );
+            return;
+          }
+            
           if(key === "remove_vertex"){
             fourd.graph.remove_vertex(selected);
             return;
@@ -66,9 +130,12 @@
           }
         },
         items: {
-          "add_adjacent_vertex": {name: "Add adjacent vertex", disabled: selected},
-          "remove_vertex": {name: "Remove vertex"},
-          "add_edge": {name: "Add edge: select another vertex"}
+          "add_vertex": {name: "Add black vertex"},
+          "add_picture_vertex": {name: "Add picture vertex"},
+          "add_adjacent_vertex": {name: "Add adjacent vertex", disabled: () => { return selected === null}},
+          "add_adjacent_picture_vertex": {name: "Add adjacent picture vertex", disabled: () => { return selected === null}},
+          "remove_vertex": {name: "Remove vertex", disabled: () => { return selected === null}},
+          "add_edge": {name: "Add edge: select another vertex", disabled: () => { return selected === null}}
         }
       });
 
