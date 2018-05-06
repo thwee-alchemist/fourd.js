@@ -11,6 +11,7 @@
     <script src="jquery-ui.min.js"></script>
     <script src="jquery.fourd.js"></script>
     <script src="jquery.contextMenu.min.js"></script>
+    <script src="download2.js"></script>
   </head>
   <body>
     <div id="display"></div>
@@ -19,6 +20,7 @@
       Scroll to zoom. 
       Right click on a vertex.
     </label>
+    <a href="javascript:prepare_download()">Download Graph</a>
     
     <script>
 
@@ -67,11 +69,7 @@
           output.edges.push([edge.source.id, edge.target.id]);
         }
         
-        browser.downloads.download({
-          filename: 'graph-editor.json.txt',
-          body: JSON.stringify(output),
-          saveAs: true
-        });
+        download(JSON.stringify(output), 'graph-editor.json');
       };
         
       snap_picture = function(){
